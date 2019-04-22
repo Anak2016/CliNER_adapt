@@ -1,0 +1,158 @@
+==========================
+== WORK FLOW
+==========================
+1.read text line by line from a txt
+    [line1, line2,..]
+2.put split each line
+    ['word1','word2',..]
+3.extract feature and return ( what is value_1 for???)
+  X_feats =
+    [[ {('feature_1','value_1): number_1, ..,('feature_n','value_n): number_n }
+        ,....]]
+4. flatten X_feats
+
+4. use DictVectorize to convert flat_x_feats into scipy.sparse
+    flat_X_feats =
+
+    (row, col)    val
+    (0, 57)       1.0
+    (0, 238)      1.0
+    (0, 297)      1.0
+    (0, 345)      5.0
+5. apply format_features to flat_X_feats
+
+    feat =
+    [[label\tfeature1_val=int_val1\t....],...]
+
+    [['0\t6=1\t231=1\t239=1\t334=1\t335=1\t340=1\t341=1\t34',...],... ]
+6. apply pycrf_instance to feat
+    xseq=
+    [['35=1', '243=1', '270=1', '351=6', '352=1',..],..]
+
+    yseq=
+    [[label1],..]
+    [['0'],..]
+7. feed xseq and yseq to pycrfsuite.Trainer
+8. DONE
+
+===========================
+== IOB label format
+===========================
+
+labels = { 'O':0,
+           'B-problem':1, 'B-test':2, 'B-treatment':3,
+           'I-problem':4, 'I-test':5, 'I-treatment':6,
+         }
+============================
+== features_list structure
+ [[ {(,):1, }, ...], ...]
+============================
+>list
+    >>[tokenized_sent, ...]
+>tokenized_sent
+    >> [tokenized_word, ...]
+>tokenized_word
+    >> [word_features, ...]
+>word_features
+    >feature_list[i] + ngram_features[i]
+
+    for each word, where i is a word's position
+        produce features of current word, prev, prev2 , next, next2
+    as followed
+
+    feature_list
+        word [i]
+            >> [{('name of features',' value(? not sure ?)'):1 (what is this?}, ...]
+
+    ngram_features
+        prev [i-1]
+            >> [{('prev_name of features', weight) :1}, ...]
+        prev2 [i-2]
+            >> [{('prev2_name of features', weight/2):1}, ...]
+        next [i+1]
+            >> [{('next_name of features', weight):1}, ...]
+        next2 [i+2]
+            >> [{('next2_name of features', weight/2):1}, ...]
+
+================================
+== flat_X_feats structure
+ type = scipy.sparse()
+================================
+  format:
+    (number of feature, value of feature) weight
+  > number of feature/value of feature are assigned differently to different unqiue feature/value of feature.
+    >> Therefore, number of value of feature will be very sprase because 1 feature can have many value
+       hence, sparse matrix.
+
+  (0, 2099)     0.5
+  (0, 2291)     0.5
+  :     :
+  (525, 9128)   1.0
+  (525, 9299)   1.0
+  (525, 9307)   1.0
+
+================================
+== X_feats
+================================
+    [[(0,2099) 0.5, ... ], ...]
+
+
+=================================
+==BELOW IS WHAT OUTPUT ARRAY LOOKING
+=================================
+
+['date', 'of', 'admission', ':', 'mm/dd/yyyy']
+['date', 'of', 'discharge', ':', 'mm/dd/yyyy']
+['discharge', 'diagnoses', ':']
+['__num__', '.', 'vasovagal', 'syncope', ',', 'status', 'post', 'fall', '.']
+['__num__', '.', 'traumatic', 'arthritis', ',', 'right', 'knee', '.']
+['__num__', '.', 'hypertension', '.']
+['__num__', '.', 'history', 'of', 'recurrent', 'urinary', 'tract', 'infection', '.']
+['__num__', '.', 'history', 'of', 'renal', 'carcinoma', ',', 'stable', '.']
+['__num__', '.']
+['history', 'of', 'chronic', 'obstructive', 'pulmonary', 'disease', '.']
+['consultants', ':', 'none', '.']
+['procedures', ':', 'none', '.']
+['brief', 'history', ':', 'the', 'patient', 'is', 'an', '(', 'xx', ')', '-year-old', 'female', 'with', 'history', 'of', 'previous', 'stroke', ';', 'hypertension', ';', 'copd', ',', 'stable', ';', 'renal', 'carcinoma', ';', 'presenting', 'after', 'a', 'fall', 'and', 'possible', 'syncope', '.']
+['while', 'walking', ',', 'she', 'accidentally', 'fell', 'to', 'her', 'knees', 'and', 'did', 'hit', 'her', 'head', 'on', 'the', 'ground', ',', 'near', 'her', 'left', 'eye', '.']
+['her', 'fall', 'was', 'not', 'observed', ',', 'but', 'the', 'patient', 'does', 'not', 'profess', 'any', 'loss', 'of', 'consciousness', ',', 'recalling', 'the', 'entire', 'event', '.']
+['the', 'patient', 'does', 'have', 'a', 'history', 'of', 'previous', 'falls', ',', 'one', 'of', 'which', 'resulted', 'in', 'a', 'hip', 'fracture', '.']
+['she', 'has', 'had', 'physical', 'therapy', 'and', 'recovered', 'completely', 'from', 'that', '.']
+['initial', 'examination', 'showed', 'bruising', 'around', 'the', 'left', 'eye', ',', 'normal', 'lung', 'examination', ',', 'normal', 'heart', 'examination', ',', 'normal', 'neurologic', 'function', 'with', 'a', 'baseline', 'decreased', 'mobility', 'of', 'her', 'left', 'arm', '.']
+['the', 'patient', 'was', 'admitted', 'for', 'evaluation', 'of', 'her', 'fall', 'and', 'to', 'rule', 'out', 'syncope', 'and', 'possible', 'stroke', 'with', 'her', 'positive', 'histories', '.']
+['diagnostic', 'studies', ':', 'all', 'x-rays', 'including', 'left', 'foot', ',', 'right', 'knee', ',', 'left', 'shoulder', 'and', 'cervical', 'spine', 'showed', 'no', 'acute', 'fractures', '.']
+['the', 'left', 'shoulder', 'did', 'show', 'old', 'healed', 'left', 'humeral', 'head', 'and', 'neck', 'fracture', 'with', 'baseline', 'anterior', 'dislocation', '.']
+['ct', 'of', 'the', 'brain', 'showed', 'no', 'acute', 'changes', ',', 'left', 'periorbital', 'soft', 'tissue', 'swelling', '.']
+['ct', 'of', 'the', 'maxillofacial', 'area', 'showed', 'no', 'facial', 'bone', 'fracture', '.']
+['echocardiogram', 'showed', 'normal', 'left', 'ventricular', 'function', ',', 'ejection', 'fraction', 'estimated', 'greater', 'than', '__num__', '%', '.']
+['hospital', 'course', ':']
+['__num__', '.']
+['fall', ':', 'the', 'patient', 'was', 'admitted', 'and', 'ruled', 'out', 'for', 'syncopal', 'episode', '.']
+['echocardiogram', 'was', 'normal', ',', 'and', 'when', 'the', 'patient', 'was', 'able', ',', 'her', 'orthostatic', 'blood', 'pressures', 'were', 'within', 'normal', 'limits', '.']
+['any', 'serious', 'conditions', 'were', 'quickly', 'ruled', 'out', '.']
+['__num__', '.']
+['status', 'post', 'fall', 'with', 'trauma', ':', 'the', 'patient', 'was', 'unable', 'to', 'walk', 'normally', 'secondary', 'to', 'traumatic', 'injury', 'of', 'her', 'knee', ',', 'causing', 'significant', 'pain', 'and', 'swelling', '.']
+['although', 'a', 'scan', 'showed', 'no', 'acute', 'fractures', ',', 'the', 'patients', 'frail', 'status', 'and', 'previous', 'use', 'of', 'cane', 'prevented', 'her', 'regular', 'abilities', '.']
+['she', 'was', 'set', 'up', 'with', 'a', 'skilled', 'nursing', 'facility', ',', 'which', 'took', 'several', 'days', 'to', 'arrange', ',', 'where', 'she', 'was', 'to', 'be', 'given', 'daily', 'physical', 'therapy', 'and', 'rehabilitation', 'until', 'appropriate', 'for', 'her', 'previous', 'residence', '.']
+['discharge', 'disposition', ':', 'discharged', 'to', 'skilled', 'nursing', 'facility', '.']
+['activity', ':', 'per', 'physical', 'therapy', 'and', 'rehabilitation', '.']
+['diet', ':', 'general', 'cardiac', '.']
+['medications', ':', 'darvocet-n', '__num__', 'one', 'tablet', 'p.o', '.']
+['__num__', 'h.', 'p.r.n', '.']
+['and', 'colace', '__num__', 'mg', 'p.o', '.']
+['b.i.d', '.']
+['medications', 'at', 'home', ':', 'zestril', '__num__', 'mg', 'p.o', '.']
+['daily', ',', 'plavix', '__num__', 'mg', 'p.o', '.']
+['daily', ',', 'norvasc', '__num__', 'mg', 'p.o', '.']
+['daily', ',', 'hydrochlorothiazide', '__num__', 'mg', 'p.o', '.']
+['daily', ',', 'potassium', 'chloride', '__num__', 'meq', 'p.o', '.']
+['daily', ',', 'atrovent', 'inhaler', '__num__', 'puffs', 'q.i.d.', ',', 'albuterol', 'inhaler', '__num__', 'puffs', '__num__', 'h', '.']
+['p.r.n.', ',', 'clonidine', '__num__', 'mg', 'p.o', '.']
+['b.i.d.', ',', 'cardura', '__num__', 'mg', 'p.o', '.']
+['daily', ',', 'and', 'macrobid', 'for', 'prophylaxis', ',', '__num__', 'mg', 'p.o', '.']
+['daily', '.']
+['followup', ':']
+['__num__', '.']
+['follow', 'up', 'per', 'skilled', 'nursing', 'facility', 'until', 'discharged', 'to', 'regular', 'residence', '.']
+['__num__', '.']
+['follow', 'up', 'with', 'primary', 'provider', 'within', '__num__', 'weeks', 'on', 'arriving', 'to', 'home', '.']

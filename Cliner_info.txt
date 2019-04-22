@@ -1,0 +1,114 @@
+======================
+==CliNER
+======================
+>classification
+ 	>>IOB classification.
+>data
+	>>i2b2 is used for real data 
+	>>data/examples/ex_doc.txt is used for example data
+============================
+== CRF info
+============================
+>pycrfsuite use, by default,
+    >L-BFGS training algorithm (it is default)
+    >Elastic Net (L1 + L2) regularization.
+============================
+== word feature extraction
+============================
+>word.lower()
+>stem_lancaster()
+>generic
+    >> convert 0-9 to 0
+>last_two letter
+>length of word
+>stem_porter
+>mitre_feature
+    >>  multiple regular expression pattern
+>word_shape
+    >> ??
+>metric_unitit
+    >>check if val is weiht, size, or volume
+>prefix
+    >>first 4 words
+>Quann_features
+    >> quantity such as weight, measurement, date
+    >> also include has_probem_form
+>next_word_stem
+>prev_word_stem
+============================
+== Sent feature extraction
+============================
+>unigram_context
+>pos
+>pos_context
+>prev
+>prev2
+>next
+>next2
+>GENIA
+>UMLS
+> prev and next features
+    >> words feature of prev and next sent (word?)
+================
+== QUESTION
+================
+Q: what is conll2000?
+Ans	Text Chunking architecture
+
+Q:What is num_unit in tf.nn.lstm?
+Ans 	num_unit = size of horizantal array of interconnected LSTM cells. 
+	aka. num_unit = dimension of hidden state (h[0]? or h[1]?)
+
+	>note:	cell_unit in tf and lstm paper represent differnt things
+		>in tf, cell_unit = dimension of hidden state
+		>in lstm paper, cell_unit = unit of gates eg. forget gate, update gate etc.
+		>in lstm paper, cell_state = memory of lstm
+
+Q: What does control_dependency do?
+Ans: 	a context manager that specifies control dependencies for all operations constructed within the context
+
+Q: What is DBpedia?
+link: https://wiki.dbpedia.org/about
+Ans: 	database that is a crowd-sourced community effort to extract structured contect fom the information created in various wikimedia projects.
+	>note: wikimedia is a non-profit company who built wikipeia and other projects including dbpedia
+
+Q: What is Concept Identification?
+link: https://en.wikipedia.org/wiki/Concept
+Ans: 	Concept Identification is abstract represtation of a word within its context.
+	>note: In the other word, it is a node (a class) in an ontology of knowledge base vocabulary.
+
+Q: What is embedding_lookup in TF?
+link: https://stackoverflow.com/questions/34870614/what-does-tf-nn-embedding-lookup-function-do
+Ans:	Embedding_lookup could regroup elemet of multiple tensors of the same shape.
+		>note: it is more convenient to manage multiple large tensor with in this way.
+Q: What is Boundary detection?
+Ans: 	Boundary detection is to distinguish one word/sentence from other words/sentences in a given documents.
+	
+Q:What is Genia?
+Ans: Genia is a Sentence Splitter which is optimised for biomedical texts.
+
+Q:What is UMLS?
+Ans: The purpose of UMLS is to facilitate the development of computer systems that behave as if they "undestand' the meaning of the languagae of biomedicine.
+	>The UMLS knowledge sources are multi-purpose and are used in systmes that perform divers fuctions involving information types 
+		>>eg patient records, scientific literature guidelines, and public health data.
+
+Q: What is 2012 i2b2 challenge?
+link: https://www.ncbi.nlm.nih.gov/pubmed/23564629
+Ans:
+
+Q: What is the use of glob package in python?
+Ans:	glob package is used to find pathnames using regular expression.
+		>note: it returns list of found pathnames.
+
+Q: How does CliNER do feature vectorization?
+Ans:
+=========================
+== NOTE
+=========================
+>for optimal performance, CliNER requires the users to obtain a UMLS (Unified Medical Language System)
+
+========================
+==PROBLEMS
+========================
+>cannot install 1 of the required masssages
+	>>marisa-trie

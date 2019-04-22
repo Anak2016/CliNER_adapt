@@ -1,0 +1,69 @@
+
+
+cliner train --txt data/examples/ex_doc.txt --annotations data/examples/ex_doc.con --format i2b2 --model models/foo.model
+=====================================
+Entity to be extracted
+ 	>COPD(Chronic obstructive pulmonary disease), re-admission, hospital.
+
+Pubcrawlwer
+	url: http://pubcrawler.gen.tcd.ie/cgi-bin/pubcrawler_www.pl
+============================
+=====TODO LIST
+============================
+> I need label for hospital, re-admission. #STUCK HERE
+    : no data set for problem, re-admission, and hospital
+    >> Can I train it separately???
+> make lstm compatible
+    : FILE = model.py
+    : FILE = entity_lstm.py CLASS = EntityLSTM
+    >> figure what are structure of dataset that is exceptable for EntityLSTM
+    >> look into EntityLSTM code and figure out what it does in detail.
+
+> learn how to search and download data from pubCrawler #STUCK HERE
+
+goal is to run data given from Prof.Zhu on Cliner with high accuracy prediction
+>Fine tuning CRF
+    >> lets try out algorithms option from pycrfsuite
+        >class 1 and 6 tends to be misclassified
+            :'B-problem':1
+            :'I-treatment':6
+        > algorithm:{‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
+            > arow is the worst
+            > lbfgs performs the same as l2sgd
+            > ap and pa equally the best
+                   :pa tends to hvae higher recall.
+
+    >> Analyze whether or not the output is exceptble.
+        :CRF overfitt to training dataset (suspect I have too little dataset)
+
+    >> I need more insight of the prediction to investigate #STUCK HERE
+        :why does it not perform well?
+        > calculate over micro/macro averaging
+        > show probability of prediction
+        > show entities that are misclassified.
+
+    >> Do I need to change features??
+
+==============================
+=== MAIN PROBLEM
+==============================
+
+
+==============================
+=== RESULT USING DR.ZHU DATASET + PUBMED
+==============================
+USING CRF
+> note1
+    : cannot detect anythin
+> note2
+    : misclassify a type of protein as problem (what is criteria for problem?)
+    : cannot detect serveral problems
+    (no teatment and test present)
+> paper1
+    :Only classify problems (due to unbalanced in training set?)
+>paper2
+    : misclassify alot of things
+        >>such as misclassify "sciencegoogle scholar" as problem
+    : predict not only problems, but also treatment. (not test was predicted)
+>pubmed.summary.txt
+    :
